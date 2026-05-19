@@ -1,0 +1,16 @@
+<div class="container" *ngIf="currentQuestion">
+
+  <h2 [innerHTML]="currentQuestion.question"></h2>
+
+  <div class="answers">
+    <button
+      mat-raised-button
+      color="primary"
+      *ngFor="let answer of answers"
+      (click)="selectAnswer(answer)"
+      [innerHTML]="answer">
+    </button>
+  </div>
+
+  <p>Score: {{ score }}</p>
+</div>
