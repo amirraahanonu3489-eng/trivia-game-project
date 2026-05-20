@@ -1,14 +1,16 @@
-<div class="container" *ngIf="currentQuestion">
+<p *ngIf="loading && !errorMessage">Loading questions...</p>
 
+<p *ngIf="errorMessage" style="color:red">
+  {{ errorMessage }}
+</p>
+
+<div *ngIf="!loading && currentQuestion">
   <h2 [innerHTML]="currentQuestion.question"></h2>
 
   <div class="answers">
-    <button
-      mat-raised-button
-      color="primary"
-      *ngFor="let answer of answers"
-      (click)="selectAnswer(answer)"
-      [innerHTML]="answer">
+    <button mat-raised-button *ngFor="let answer of answers"
+            (click)="selectAnswer(answer)"
+            [innerHTML]="answer">
     </button>
   </div>
 

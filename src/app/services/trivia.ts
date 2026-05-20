@@ -14,4 +14,5 @@ export class TriviaService {
   getQuestions(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TriviaService } from '../../services/trivia';
 import { Router } from '@angular/router';
@@ -18,44 +18,58 @@ export class QuizComponent implements OnInit {
   score = 0;
   currentQuestion: any;
   answers: string[] = [];
+  errorMessage = '';
+  loading = true;
 
   constructor(
     private triviaService: TriviaService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-  this.triviaService.getQuestions().subscribe({
-    next: (data: any) => {
-      this.questions = data.results || [];
-      this.loadQuestion();
-    },
-    error: (err) => {
-      console.error("API failed:", err);
+    this.loading = true;
 
-      alert("Trivia API is rate limited. Please wait a bit and refresh.");
+    this.triviaService.getQuestions().subscribe({
+      next: (data: any) => {
 
-      this.questions = [];
-    }
-  });
-}
+        console.log("API SUCCESS:", data);
+
+        this.questions = data.results;
+        this.currentIndex = 0;
+
+        this.loadQuestion();
+
+        this.loading = false;
+        this.cdr.detectChanges();
+
+        console.log("LOADING:", this.loading);
+      },
+
+      error: (err) => {
+        console.error(err);
+        this.errorMessage = "API failed";
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   loadQuestion() {
-  if (!this.questions || this.questions.length === 0) return;
+    if (!this.questions.length) return;
 
-  this.currentQuestion = this.questions[this.currentIndex];
-  if (!this.currentQuestion) return;
+    this.currentQuestion = this.questions[this.currentIndex];
 
-  this.answers = [
-    ...this.currentQuestion.incorrect_answers,
-    this.currentQuestion.correct_answer
-  ];
+    this.answers = [
+      ...this.currentQuestion.incorrect_answers,
+      this.currentQuestion.correct_answer
+    ];
 
-  this.answers = this.shuffle(this.answers);
-}
+    this.answers = this.shuffle(this.answers);
+  }
 
   shuffle(array: string[]) {
-    return array.sort(() => Math.random() - 0.5);
+    return [...array].sort(() => Math.random() - 0.5);
   }
 
   selectAnswer(answer: string) {
