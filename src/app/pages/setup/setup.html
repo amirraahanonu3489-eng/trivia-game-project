@@ -1,0 +1,67 @@
+<div class="setup-container">
+
+  <h1>Trivia Game Setup</h1>
+
+  <label>Number of Players</label>
+  <select [(ngModel)]="playerCount">
+    <option [value]="1">1</option>
+    <option [value]="2">2</option>
+    <option [value]="3">3</option>
+  </select>
+
+  <label>Number of Questions</label>
+  <select [(ngModel)]="questionAmount">
+    <option [value]="3">3</option>
+    <option [value]="6">6</option>
+    <option [value]="9">9</option>
+    <option [value]="12">12</option>
+  </select>
+
+  <label>Category</label>
+  <select [(ngModel)]="category">
+    <option value="General Knowledge">General Knowledge</option>
+    <option value="Science">Science</option>
+    <option value="History">History</option>
+    <option value="Sports">Sports</option>
+  </select>
+
+  <label>Difficulty</label>
+  <select [(ngModel)]="difficulty">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+
+  <label>Question Type</label>
+  <select [(ngModel)]="questionType">
+    <option value="multiple">Multiple Choice</option>
+    <option value="boolean">True / False</option>
+  </select>
+
+  <div *ngIf="playerCount > 1">
+
+    <h3>Select Players</h3>
+
+    <div *ngFor="let player of availablePlayers">
+
+  <input
+    type="checkbox"
+    [checked]="isSelected(player)"
+    (change)="togglePlayer(player)"
+  >
+
+  {{ player }}
+
+</div>
+
+  </div>
+
+  <p class="error" *ngIf="showError">
+    Questions must divide evenly between players.
+  </p>
+
+  <button (click)="startGame()">
+    Start Game
+  </button>
+
+</div>

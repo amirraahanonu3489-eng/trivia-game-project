@@ -1,18 +1,49 @@
-<p *ngIf="loading && !errorMessage">Loading questions...</p>
+<div
+  class="quiz-container"
+  [style.background-color]="currentPlayer?.color || '#ffffff'"
+>
 
-<p *ngIf="errorMessage" style="color:red">
-  {{ errorMessage }}
-</p>
+  <h2>Trivia Game</h2>
 
-<div *ngIf="!loading && currentQuestion">
-  <h2 [innerHTML]="currentQuestion.question"></h2>
+  <div *ngIf="players.length && questions.length">
 
-  <div class="answers">
-    <button mat-raised-button *ngFor="let answer of answers"
-            (click)="selectAnswer(answer)"
-            [innerHTML]="answer">
+    <h3>Current Player: {{ currentPlayer.name }}</h3>
+
+    <div *ngFor="let p of players">
+      {{ p.name }} - ✅ {{ p.correct }} | ❌ {{ p.incorrect }}
+    </div>
+
+    <p>Leading: {{ leader.name }}</p>
+
+    <p>
+      Progress: {{ currentIndex + 1 }}/{{ questions.length }}
+    </p>
+
+    <p>
+      {{ progressPercent | number:'1.0-0' }}%
+    </p>
+
+    <hr>
+
+    <h2 [innerHTML]="currentQuestion.question"></h2>
+
+    <button
+      *ngFor="let answer of currentQuestion.answers"
+      (click)="selectAnswer(answer)"
+      [disabled]="selectedAnswer"
+    >
+      {{ answer }}
     </button>
+
+    <br><br>
+
+    <button
+      (click)="nextQuestion()"
+      [disabled]="!selectedAnswer"
+    >
+      Next Question
+    </button>
+
   </div>
 
-  <p>Score: {{ score }}</p>
 </div>
